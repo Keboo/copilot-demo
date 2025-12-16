@@ -1,0 +1,21 @@
+{
+  "name": ".NET 10 and Node.js",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-10.0",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+  "forwardPorts": [5173, 5000],
+  "postCreateCommand": "dotnet dev-certs https --trust && cd src/client-app && npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot",
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  }
+}
