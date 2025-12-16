@@ -70,7 +70,6 @@ app.MapGet("/api/activities", () => Results.Ok(activities))
 
 app.MapPost("/api/activities/{activityName}/signup", (string activityName, SignupRequest request) =>
 {
-    // Validate activity exists
     if (!activities.ContainsKey(activityName))
     {
         return Results.NotFound(new { detail = "Activity not found" });
@@ -78,7 +77,18 @@ app.MapPost("/api/activities/{activityName}/signup", (string activityName, Signu
 
     var activity = activities[activityName];
 
-    // Add student
+    // Check if student is already registered
+    if (activity.Participants.Contains(request.Email))
+    {
+        return Results.BadRequest(new { detail = $"{request.Email} is already registered for {activityName}" });
+    }
+
+    // Check capacity
+    if (activity.Participants.Count >= activity.MaxParticipants)
+    {
+        return Results.BadRequest(new { detail = "Activity is full" });
+    }
+
     activity.Participants.Add(request.Email);
     return Results.Ok(new { message = $"Signed up {request.Email} for {activityName}" });
 })
