@@ -162,3 +162,6 @@ app.MapDelete("/api/activities/{activityName}/unregister", (string activityName,
 app.MapFallbackToFile("index.html");
 
 app.Run();
+
+// Make Program class accessible to tests
+public partial class Program { }
