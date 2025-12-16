@@ -27,7 +27,6 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.MapStaticAssets();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -61,6 +60,51 @@ var activities = new Dictionary<string, Activity>
         Schedule = "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
         MaxParticipants = 30,
         Participants = new List<string> { "john@mergington.edu", "olivia@mergington.edu" }
+    },
+    // Sports activities
+    ["Soccer Team"] = new Activity
+    {
+        Description = "Practice teamwork and compete in interschool soccer matches",
+        Schedule = "Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
+        MaxParticipants = 22,
+        Participants = new List<string> { "liam@mergington.edu", "noah@mergington.edu" }
+    },
+    ["Basketball Club"] = new Activity
+    {
+        Description = "Train skills and scrimmage to prepare for tournaments",
+        Schedule = "Wednesdays, 3:30 PM - 5:00 PM",
+        MaxParticipants = 15,
+        Participants = new List<string> { "ava@mergington.edu", "isabella@mergington.edu" }
+    },
+    // Artistic activities
+    ["Art Workshop"] = new Activity
+    {
+        Description = "Explore painting, drawing, and mixed media techniques",
+        Schedule = "Mondays, 3:30 PM - 5:00 PM",
+        MaxParticipants = 18,
+        Participants = new List<string> { "mia@mergington.edu", "amelia@mergington.edu" }
+    },
+    ["School Choir"] = new Activity
+    {
+        Description = "Develop vocal skills and perform at school events",
+        Schedule = "Fridays, 2:30 PM - 4:00 PM",
+        MaxParticipants = 25,
+        Participants = new List<string> { "harper@mergington.edu", "evelyn@mergington.edu" }
+    },
+    // Intellectual activities
+    ["Math Club"] = new Activity
+    {
+        Description = "Problem-solving sessions and math competition prep",
+        Schedule = "Thursdays, 3:30 PM - 4:30 PM",
+        MaxParticipants = 20,
+        Participants = new List<string> { "benjamin@mergington.edu", "lucas@mergington.edu" }
+    },
+    ["Debate Team"] = new Activity
+    {
+        Description = "Learn argumentation and practice formal debates",
+        Schedule = "Wednesdays, 4:00 PM - 5:30 PM",
+        MaxParticipants = 16,
+        Participants = new List<string> { "charlotte@mergington.edu", "ella@mergington.edu" }
     }
 };
 
@@ -70,7 +114,6 @@ app.MapGet("/api/activities", () => Results.Ok(activities))
 
 app.MapPost("/api/activities/{activityName}/signup", (string activityName, SignupRequest request) =>
 {
-    // Validate activity exists
     if (!activities.ContainsKey(activityName))
     {
         return Results.NotFound(new { detail = "Activity not found" });
@@ -78,13 +121,47 @@ app.MapPost("/api/activities/{activityName}/signup", (string activityName, Signu
 
     var activity = activities[activityName];
 
-    // Add student
+    // Check if student is already registered
+    if (activity.Participants.Contains(request.Email))
+    {
+        return Results.BadRequest(new { detail = $"{request.Email} is already registered for {activityName}" });
+    }
+
+    // Check capacity
+    if (activity.Participants.Count >= activity.MaxParticipants)
+    {
+        return Results.BadRequest(new { detail = "Activity is full" });
+    }
+
     activity.Participants.Add(request.Email);
     return Results.Ok(new { message = $"Signed up {request.Email} for {activityName}" });
 })
     .WithName("SignupForActivity");
 
+app.MapDelete("/api/activities/{activityName}/unregister", (string activityName, string email) =>
+{
+    if (!activities.ContainsKey(activityName))
+    {
+        return Results.NotFound(new { detail = "Activity not found" });
+    }
+
+    var activity = activities[activityName];
+
+    // Check if student is registered
+    if (!activity.Participants.Contains(email))
+    {
+        return Results.NotFound(new { detail = $"{email} is not registered for {activityName}" });
+    }
+
+    activity.Participants.Remove(email);
+    return Results.Ok(new { message = $"Unregistered {email} from {activityName}" });
+})
+    .WithName("UnregisterFromActivity");
+
 // SPA fallback - serve index.html for client-side routes
 app.MapFallbackToFile("index.html");
 
 app.Run();
+
+// Make Program class accessible to tests
+public partial class Program { }
