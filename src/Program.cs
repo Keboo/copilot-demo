@@ -27,7 +27,6 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.MapStaticAssets();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -61,6 +60,51 @@ var activities = new Dictionary<string, Activity>
         Schedule = "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
         MaxParticipants = 30,
         Participants = new List<string> { "john@mergington.edu", "olivia@mergington.edu" }
+    },
+    // Sports activities
+    ["Soccer Team"] = new Activity
+    {
+        Description = "Practice teamwork and compete in interschool soccer matches",
+        Schedule = "Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
+        MaxParticipants = 22,
+        Participants = new List<string> { "liam@mergington.edu", "noah@mergington.edu" }
+    },
+    ["Basketball Club"] = new Activity
+    {
+        Description = "Train skills and scrimmage to prepare for tournaments",
+        Schedule = "Wednesdays, 3:30 PM - 5:00 PM",
+        MaxParticipants = 15,
+        Participants = new List<string> { "ava@mergington.edu", "isabella@mergington.edu" }
+    },
+    // Artistic activities
+    ["Art Workshop"] = new Activity
+    {
+        Description = "Explore painting, drawing, and mixed media techniques",
+        Schedule = "Mondays, 3:30 PM - 5:00 PM",
+        MaxParticipants = 18,
+        Participants = new List<string> { "mia@mergington.edu", "amelia@mergington.edu" }
+    },
+    ["School Choir"] = new Activity
+    {
+        Description = "Develop vocal skills and perform at school events",
+        Schedule = "Fridays, 2:30 PM - 4:00 PM",
+        MaxParticipants = 25,
+        Participants = new List<string> { "harper@mergington.edu", "evelyn@mergington.edu" }
+    },
+    // Intellectual activities
+    ["Math Club"] = new Activity
+    {
+        Description = "Problem-solving sessions and math competition prep",
+        Schedule = "Thursdays, 3:30 PM - 4:30 PM",
+        MaxParticipants = 20,
+        Participants = new List<string> { "benjamin@mergington.edu", "lucas@mergington.edu" }
+    },
+    ["Debate Team"] = new Activity
+    {
+        Description = "Learn argumentation and practice formal debates",
+        Schedule = "Wednesdays, 4:00 PM - 5:30 PM",
+        MaxParticipants = 16,
+        Participants = new List<string> { "charlotte@mergington.edu", "ella@mergington.edu" }
     }
 };
 
