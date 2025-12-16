@@ -93,7 +93,19 @@ function App() {
                 <h4>{name}</h4>
                 <p><strong>Description:</strong> {activity.description}</p>
                 <p><strong>Schedule:</strong> {activity.schedule}</p>
-                <p><strong>Participants:</strong> {activity.participants.length}/{activity.maxParticipants}</p>
+                <p><strong>Capacity:</strong> {activity.participants.length}/{activity.maxParticipants}</p>
+                <div className="participants-section">
+                  <strong>Participants:</strong>
+                  {activity.participants.length > 0 ? (
+                    <ul className="participants-list">
+                      {activity.participants.map((participant, index) => (
+                        <li key={index}>{participant}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="no-participants">No participants yet - be the first to join!</p>
+                  )}
+                </div>
               </div>
             ))}
           </div>
