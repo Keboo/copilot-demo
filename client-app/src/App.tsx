@@ -75,6 +75,33 @@ function App() {
     }
   };
 
+  const handleUnregister = async (activityName: string, participantEmail: string) => {
+    setMessage(null);
+
+    try {
+      const response = await fetch(`/api/activities/${encodeURIComponent(activityName)}/unregister?email=${encodeURIComponent(participantEmail)}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to unregister');
+      }
+
+      const result = await response.json();
+      setMessage({ text: result.message || 'Successfully unregistered!', type: 'success' });
+      
+      // Refresh activities to show updated participant list
+      const activitiesResponse = await fetch('/api/activities');
+      const updatedActivities = await activitiesResponse.json();
+      setActivities(updatedActivities);
+    } catch (err) {
+      setMessage({ 
+        text: err instanceof Error ? err.message : 'Failed to unregister', 
+        type: 'error' 
+      });
+    }
+  };
+
   if (loading) return <div>Loading activities...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -99,7 +126,17 @@ function App() {
                   {activity.participants.length > 0 ? (
                     <ul className="participants-list">
                       {activity.participants.map((participant, index) => (
-                        <li key={index}>{participant}</li>
+                        <li key={index}>
+                          <span className="participant-email">{participant}</span>
+                          <button 
+                            className="delete-btn" 
+                            onClick={() => handleUnregister(name, participant)}
+                            aria-label={`Remove ${participant}`}
+                            title={`Remove ${participant}`}
+                          >
+                            🗑️
+                          </button>
+                        </li>
                       ))}
                     </ul>
                   ) : (
